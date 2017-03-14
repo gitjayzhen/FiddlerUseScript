@@ -178,12 +178,14 @@ class Handlers
         if ((null!=uiBoldURI) && oSession.uriContains(uiBoldURI)) {
             oSession["ui-bold"]="QuickExec";
         }
-        //1.在此处【设置代理网络限速】 50KB/s需要delay 20ms 修改完记得勾选【simulate modem speeds】[randInt(1,50) 模拟网络抖动]
+        //1.在此处【设置代理网络限速】1KB的量 50Kb/s需要delay 160ms 
+        //带宽：mbps kbps (比特流)  网速：KB/s MB/s （字节流）
+        //修改完记得勾选【simulate modem speeds】[randInt(1,50) 模拟网络抖动]
         if (m_SimulateModem) {
             // Delay sends by 300ms per KB uploaded.
-            oSession["request-trickle-delay"] = "3000"; 
+            oSession["request-trickle-delay"] = "1000"; 
             // Delay receives by 150ms per KB downloaded.
-            oSession["response-trickle-delay"] = "2000"; 
+            oSession["response-trickle-delay"] = "1000"; 
         }
         //2.在此处【过滤并高亮显示host】
         if( oSession.host.IndexOf("i-play.mobile.youku.com") > -1 || oSession.host.IndexOf("a-dxk.play.api.3g.youku.com") > -1){
@@ -195,9 +197,9 @@ class Handlers
         //    oSession["ui-color"] = "yellow";
         //    }
         
-        //4.在此处【重定向urlplace】host和url的判断
-        if(oSession.HostnameIs("api.mobile.youku.com") && oSession.url.IndexOf("/common/dl/updateinfo") > -1){
-            oSession.hostname = "test.api.mobile.youku.com"
+        //4.在此处【重定向urlplace】host和url的判断  http://    http://
+        if(oSession.HostnameIs("test.api.mobile.youku.com") && oSession.url.IndexOf("/openapi-wireless/initial") > -1){
+            oSession.hostname = "api.mobile.youku.com"
             }
 
         if (m_DisableCaching) {
@@ -283,7 +285,7 @@ class Handlers
         if (m_Hide304s && oSession.responseCode == 304) {
             oSession["ui-hide"] = "true";
         }
-        
+        /*
         //5.在此处修改response的bady内容
         if(oSession.HostnameIs("com") && oSession.url.IndexOf("/common/v5/play") > -1){
             // 获取response中的body字符串
@@ -297,20 +299,52 @@ class Handlers
             // 将修改后的body，重新写回Request中
             oSession.utilSetResponseBody(strBody);
         }
+        */
         
-        //6.在此处修改response返回body中的json数据
-        if(oSession.HostnameIs("heyi-test.m.taobao.com") && oSession.url.IndexOf("/common/v5/play") > -1){
+        /*
+        //6.在此处修改json中的数据【修改接口字段的值】
+        if(oSession.HostnameIs("i-play.mobile.youku.com") && oSession.url.IndexOf("/common/v5/play") > -1){
             // 获取Response Body中JSON字符串
             var responseStringOriginal =  oSession.GetResponseBodyAsString();
             // 转换为可编辑的JSONObject变量
              var responseJSON = Fiddler.WebFormats.JSON.JsonDecode(responseStringOriginal);
              // 修改JSONObject变量，修改字段数据
-             responseJSON.JSONObject["stream_mode"] = 0;
+             responseJSON.JSONObject["new_core"] = "True";  
+             responseJSON.JSONObject["stream_mode"] = 5;
              // 重新设置Response Body
              var responseStringDestinal = Fiddler.WebFormats.JSON.JsonEncode(responseJSON.JSONObject);
              oSession.utilSetResponseBody(responseStringDestinal);
             }
-            }
+        */
+        
+        
+        //7.在此处修改json中的数据【增加接口字段=值】
+        if(oSession.HostnameIs("i-play.mobile.youku.com") && oSession.url.IndexOf("/common/v5/play") > -1){
+            // 获取Response Body中JSON字符串
+            var responseStringOriginal =  oSession.GetResponseBodyAsString();
+            // 转换为可编辑的JSONObject变量
+            var responseJSON = Fiddler.WebFormats.JSON.JsonDecode(responseStringOriginal);
+            // 修改JSONObject变量，修改字段数据
+            responseJSON.JSONObject["type_arr"] = ["bullet"];
+            // 重新设置Response Body
+            var responseStringDestinal = Fiddler.WebFormats.JSON.JsonEncode(responseJSON.JSONObject);
+            oSession.utilSetResponseBody(responseStringDestinal);
+        }
+        
+        /*
+        //8.修改系统弹幕的跳转方式【http://dmapp.youku.com/common/danmu/sysdmlist 】
+        if(oSession.HostnameIs("dmapp.youku.com") && oSession.url.IndexOf("common/danmu/sysdmlist") > -1){
+            // 获取Response Body中JSON字符串
+            var responseStringOriginal =  oSession.GetResponseBodyAsString();
+            // 转换为可编辑的JSONObject变量
+            var responseJSON = Fiddler.WebFormats.JSON.JsonDecode(responseStringOriginal);
+            // 修改JSONObject变量，修改字段数据
+            responseJSON.JSONObject["data"]["results"][0]["displayMethod"] = 2;
+            // 重新设置Response Body
+            var responseStringDestinal = Fiddler.WebFormats.JSON.JsonEncode(responseJSON.JSONObject);
+            oSession.utilSetResponseBody(responseStringDestinal);
+        }*/
+     }
 
 /*
     // This function executes just before Fiddler returns an error that it has 
