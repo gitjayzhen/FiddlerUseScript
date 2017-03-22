@@ -40,7 +40,7 @@ if( oSession.host.IndexOf("host") > -1 || oSession.host.IndexOf("host") > -1){
 }
 
 //3.在此处【过滤url并高亮显示】
-if(oSession.url.IndexOf("/player/domain_name") > -1){
+if(oSession.url.IndexOf("url_path") > -1){
     oSession["ui-color"] = "yellow";
     }
 
@@ -51,6 +51,7 @@ if(oSession.HostnameIs("host") && oSession.url.IndexOf("url_path") > -1){
 
 	
 +++++++++++++++++++beforerespond：++++++++++++++++++++++++
+
 //需要在返回头这里就设置buffer处理，否则，后续无法在onBeforeResponse中修改body（修改的动作不会阻塞原来的返回）
 static function OnPeekAtResponseHeaders(oSession: Session) {
 	if (oSession.HostnameIs("cmshow.qq.com") && oSession.oResponse.headers.ExistsAndContains("Content-Type","text/html")){
@@ -86,7 +87,7 @@ if(oSession.HostnameIs("host") && oSession.url.IndexOf("url_path") > -1){
 	}
 
 //7.在此处修改json中的数据【增加接口字段=值】
-if(oSession.HostnameIs("i-play.mobile.youku.com") && oSession.url.IndexOf("/common/v5/play") > -1){
+if(oSession.HostnameIs("host") && oSession.url.IndexOf("url_path") > -1){
 	// 获取Response Body中JSON字符串
 	var responseStringOriginal =  oSession.GetResponseBodyAsString();
 	// 转换为可编辑的JSONObject变量
@@ -127,3 +128,17 @@ static function OnBeforeResponse(oSession: Session) {
 		oSession["x-overrideHost"] = "125.125.125.125";
 	}
 }
+
+
+//10.场景--同时将接口返回修改成404;这种方式可以解决bpu命令的单个调试的 缺点；全部断点需要操作的步骤太多，浪费时间
+if(oSession.HostnameIs("host1") && oSession.url.IndexOf("url_path1") > -1){
+	//说明已经拿到了播放请求接口,将其返回网络状态码修改成：404
+	oSession.oResponse.headers.HTTPResponseCode = 404;
+	oSession.oResponse.headers.HTTPResponseStatus = "use fiddler change responed code";
+	
+	}
+if(oSession.HostnameIs("host2") && oSession.url.IndexOf("url_path2") > -1){
+	//同上
+	oSession.oResponse.headers.HTTPResponseCode = 404;
+	oSession.oResponse.headers.HTTPResponseStatus = "use fiddler change responed code";
+	}
