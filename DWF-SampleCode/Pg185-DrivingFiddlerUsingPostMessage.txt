@@ -1,0 +1,47 @@
+    // Page 184
+    #include "stdafx.h"
+    int _tmain(int argc, _TCHAR* argv[])
+    {
+      HWND hWndControl = FindWindow(NULL, L"Fiddler - HTTP Debugging Proxy");
+
+      if (NULL == hWndControl) 
+      {
+        printf("ERROR: Fiddler window was not found.\n");
+        return 2;
+      }
+
+      tagCOPYDATASTRUCT oCDS;
+
+      oCDS.dwData = 61181; // Use 61180 for ANSI; 61181 for Unicode
+      oCDS.cbData = lstrlen(argv[1]) * sizeof(WCHAR);
+      oCDS.lpData = argv[1];
+		
+      SendMessage(hWndControl, WM_COPYDATA, NULL, (WPARAM) wParam, (LPARAM) &oCDS);  
+      return 0;
+    }
+
+    // Page 185
+    internal const int WM_COPYDATA = 0x4A;
+
+    [DllImport("user32.dll", EntryPoint = "SendMessage")]
+    internal static extern IntPtr SendWMCopyMessage(IntPtr hWnd, int Msg, 
+      IntPtr wParam, ref SendDataStruct lParam);
+
+    [DllImport("user32.dll")] 
+    internal static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
+
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct SendDataStruct 
+    {
+      public IntPtr dwData;
+      public int cbData;
+      public string strData;
+    }
+
+    // Page 185
+    SendDataStruct oStruct = new Utilities.SendDataStruct();
+    oStruct.dwData = (IntPtr) 61181;
+    oStruct.strData = "TheString";
+    oStruct.cbData = Encoding.Unicode.GetBytes(oStruct.strData).Length;
+    IntPtr hWnd = FindWindow(null, "Fiddler - HTTP Debugging Proxy");
+    SendWMCopyMessage(hWnd, Utilities.WM_COPYDATA, IntPtr.Zero, ref oStruct);

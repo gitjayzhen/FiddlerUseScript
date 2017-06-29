@@ -1,0 +1,12 @@
+<!-- pg 87, Sample XML file for .NET Apps to point at Fiddler -->
+    <configuration>
+      <system.net>
+        <defaultProxy>
+          <proxy
+            usesystemdefault="true"
+            bypassonlocal="false"
+            proxyaddress="http://127.0.0.1:8888"
+          />
+        </defaultProxy>
+      </system.net>
+    </configuration>

@@ -147,7 +147,12 @@ class Handlers
         }
         UI.actUpdateInspector(true,true);
     }
-
+	
+	//公共方法：模拟随机数，可用于接口随机值和网速模拟
+	static function randInt(min, max){
+    return Math.round(Math.random()*(max-min)+min);
+	}
+	
     static function OnBeforeRequest(oSession: Session) {
         // Sample Rule: Color ASPX requests in RED
         // if (oSession.uriContains(".aspx")) {	oSession["ui-color"] = "red";	}
@@ -180,7 +185,7 @@ class Handlers
         }
         //1.在此处【设置代理网络限速】1KB的量 50Kb/s需要delay 160ms 
         //带宽：mbps kbps (比特流)  网速：KB/s MB/s （字节流）
-        //修改完记得勾选【simulate modem speeds】[randInt(1,50) 模拟网络抖动]
+        //修改完记得勾选【simulate modem speeds】[调用这个方法randInt(1,50) 模拟网络抖动]
         if (m_SimulateModem) {
             // Delay sends by 300ms per KB uploaded.
             oSession["request-trickle-delay"] = "1000"; 
@@ -317,6 +322,7 @@ class Handlers
             }
         */
         
+		
         
         //7.在此处修改json中的数据【增加接口字段=值】
         if(oSession.HostnameIs("i-play.mobile.youku.com") && oSession.url.IndexOf("/common/v5/play") > -1){
@@ -344,6 +350,28 @@ class Handlers
             var responseStringDestinal = Fiddler.WebFormats.JSON.JsonEncode(responseJSON.JSONObject);
             oSession.utilSetResponseBody(responseStringDestinal);
         }*/
+		/*
+		        
+        //脚本9:该方法进行修改pdl首页状态显示内容
+        if(oSession.HostnameIs("10.150.20.82:8092") && oSession.url.IndexOf("/userAccount/mainPage")>-1){
+            
+            var res = oSession.GetResponseBodyAsString();
+            var resJson = Fiddler.WebFormats.JSON.JsonDecode(res);
+            //借款状态：1未申请，2审核中，3审核通过，4审核被拒，6借款申请失败，7借款申请成功（待签约），8签
+            var rand = randInt(1,8);
+            if (rand == 5){
+                rand=1;
+                }
+                
+            resJson.JSONObject['data']['loanStatus'] = rand;
+            
+            var newRes = Fiddler.WebFormats.JSON.JsonEncode(resJson.JSONObject);
+            oSession.utilSetResponseBody(newRes);
+            
+            //FiddlerObject.alert(rand);
+                
+            }
+		*/
      }
 
 /*

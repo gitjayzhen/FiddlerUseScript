@@ -1,0 +1,474 @@
+    // Page 68
+    if (oSession.HTTPMethodIs("CONNECT") && oSession.HostnameIs("example.com")) 
+    {
+      oSession["X-OverrideHost"] ="www.fiddler2.com";
+    }
+
+    // Page 68
+    if (oSession.HTTPMethodIs("CONNECT") && 
+      oSession.HostnameIs("example.com")) 
+    {
+      oSession["X-OverrideHost"] ="www.fiddler2.com";
+ 
+      // Set flag to suppress Fiddler's HTTPS Name Mismatch errors
+      oSession["X-IgnoreCertCNMismatch"] = "no worries mate";
+    }
+
+    // Page 98
+    if (oSession.HostnameIs("test.example.com")) {
+      oSession["x-OverrideGateway"] = "127.0.0.1:8111";
+    }
+
+    // Page 101
+    // This block enables streaming for files larger than 5mb
+    if (oSession.oResponse.headers.Exists("Content-Length"))
+    {
+      var sLen = oSession.oResponse["Content-Length"];
+      if (!isNaN(sLen)) {
+        var iLen = parseInt(sLen); 
+        if (iLen > 5000000) {
+          oSession.bBufferResponse = false; 
+          oSession["ui-color"] = "yellow";
+          oSession["log-drop-response-body"] = "save memory";
+        }
+      }
+    }
+
+    // Page 113
+    if (oSession.HTTPMethodIs("CONNECT") && 
+        oSession.HostnameIs("buggy.example.com")) 
+    {
+      oSession["x-OverrideSslProtocols"] = "ssl3.0";
+    }
+
+    // Page 117
+    static function OnBeforeRequest(oSession: Session)
+    {
+      // To use the current Fiddler user's credentials:
+      if (oSession.HostnameIs("ServerThatDemandsCreds")) {
+        oSession["x-AutoAuth"] = "(default)";
+      }
+
+      // or, to use explicit credentials...
+      if (oSession.HostnameIs("ServerUsingChannelBinding")) {
+        oSession["x-AutoAuth"] = "redmond\\ericlaw:MyP@$$w0rd";
+      }
+
+      //...
+
+    // Page 119
+    static function OnBeforeRequest(oSession: Session)
+    {
+      if (oSession.HTTPMethodIs("CONNECT") { 
+        if (oSession.HostnameIs("exampleA")) {
+          oSession["https-Client-Certificate"] = "C:\\certs\\CertA.cer";
+        }
+        else
+        if (oSession.HostnameIs("exampleB")) {
+          oSession["https-Client-Certificate"] = "C:\\test\\CertB.cer";
+        }
+      }
+
+      //...
+
+    // Page 178
+    var sMyString: String = "StringValue";
+    var bMyBool: boolean = false;
+    var iMyInt: int = 42;
+
+
+    // Page 178
+    // Call the hidden method using the format Object.add_EventName(handlerFunction)
+    FiddlerApplication.add_OnClearCache(catchClearCache);
+
+    // Implement the event handler
+    static function catchClearCache(sender, args:CacheClearEventArgs) {
+      MessageBox.Show("User cleared the cache.");
+    }
+
+    // Page 186
+    // Launch Opera
+    ToolsAction("Launch Opera")
+    public static function DoLaunchOpera()
+    { 
+      System.Diagnostics.Process.Start("opera.exe", String.Empty);
+    }
+
+
+    // Page 186
+    // Launch Opera to the URL of the first selected session
+    ToolsAction("Launch Opera to &URL")
+    public static function DoLaunchOperaToURL(oS: Session[]) 
+    { 
+      if (oS.Length > 0) {
+         System.Diagnostics.Process.Start("opera.exe", oS[0].fullUrl);
+      }
+    }
+
+    // Page 187
+    RulesOption("Hide 304s")
+    public static var m_Hide304s: boolean = false;
+
+    // Page 188
+    if (m_Hide304s && (304 == oSession.responseCode)) {
+
+      oSession["ui-hide"] = "true";
+
+      // Note: This block could be placed in the OnPeekAtResponseHeaders method, 
+      // since it does not depend upon the availability of the response body.
+    }
+
+    // Page 187
+    ContextAction("Decode Selected Sessions")
+    public static function DoRemoveEncoding(oS: Session[])
+    {
+      for (var x=0; x < oS.Length; x++) {
+         oS[x].utilDecodeRequest();
+         oS[x].utilDecodeResponse();
+      }
+    }
+
+    // Page 187
+    RulesOption("Hide 304s")
+    public static var m_Hide304s: boolean = false;
+
+    // Page 188
+    if (m_Hide304s && (304 == oSession.responseCode)) {
+
+      oSession["ui-hide"] = "true";
+
+      // Note: This block could be placed in the OnPeekAtResponseHeaders method, 
+      // since it does not depend upon the availability of the response body.
+    }
+
+    // Page 188
+    RulesOption("Simulate &Modem Speeds", "Per&formance")
+    public static var m_SimulateModem: boolean = false;
+
+    RulesOption("&Disable Caching", "Per&formance")
+    public static var m_DisableCaching: boolean = false;
+
+    RulesOption("&Show Time-to-Last-Byte", "Per&formance")
+    public static var m_ShowTTLB: boolean = false;
+
+    // Page 188
+    RulesOption("Option A", "MyMenu", true)
+    public static var m_OptionA: boolean = true;
+
+    RulesOption("Option B", "MyMenu", true)
+    public static var m_OptionB: boolean = false;
+
+    RulesOption("Option C", "MyMenu", true, true)  // Splitter after option
+    public static var m_OptionC: boolean = false;
+
+    RulesOption("Some other setting", "MyMenu", false)
+    public static var m_OtherSetting: boolean = true;
+
+    // Page 189
+    RulesString("MyStringRule", true)
+    RulesStringValue("MyMenuText1", "MyValue1")
+    RulesStringValue("MyMenuText2", "MyValue2")
+    RulesStringValue("MyMenuText3", "MyValue3")
+    public static var m_StringRule: String = String.Empty;
+
+    // Page 190
+    RulesString("MyStringRule", true)
+    RulesStringValue(1, "First Item", "one")
+    RulesStringValue(2, "Second Item", "two", true)
+    RulesStringValue(3, "Third Item", "three")
+    RulesStringValue(4, "Fourth Item", "four")
+    RulesStringValue(5, "Ask me...", "%CUSTOM%")
+    public static var m_StringRule: String = "two";
+
+    // Page 190
+    if (null != sUA) {
+      oSession.oRequest["User-Agent"] = sUA; 
+    }
+
+    // Page 191
+    QuickLinkMenu("&Links") 
+    QuickLinkItem("IE GeoLoc TestDrive",
+      "http://ie.microsoft.com/testdrive/HTML5/Geolocation/Default.html")
+    QuickLinkItem("FiddlerCore", "http://fiddler.wikidot.com/fiddlercore")
+    public static function DoLinksMenu(sText: String, sAction: String)
+    {
+      Utilities.LaunchHyperlink(sAction);
+    }
+
+    // Page 191
+    QuickLinkMenu("&Browse") 
+    QuickLinkItem("&IE", "iexplore.exe")
+    QuickLinkItem("&Firefox", "firefox.exe")
+    QuickLinkItem("&Opera", "Opera.exe")
+    QuickLinkItem("&Chrome", "Chrome.exe")
+    public static function DoBrowsersMenu(sText: String, sAction: String)
+    {
+      var oS = FiddlerApplication.UI.GetSelectedSessions();
+      var sURL = String.Empty;
+
+      if (oS.Length > 0) { sURL = oS[0].fullUrl; }
+
+      System.Diagnostics.Process.Start(sAction, sURL);
+    }
+
+    // Page 192
+    BindUIColumn("Method", 60)
+    public static function FillMethodColumn(oS: Session) {
+      if ((oS.oRequest != null) && (oS.oRequest.headers != null))
+      {
+        return oS.oRequest.headers.HTTPMethod; 
+      }
+      return String.Empty;
+    }
+
+    // Page 193
+    BindUIColumn("HasFuzzle", 60)
+    public static function FillFuzzleColumn(oS: Session) {
+
+      // Check the cache and return the value if we already computed it
+      if (oS.oFlags.ContainsKey("HasFuzzle")) 
+      {
+        return oS.oFlags["HasFuzzle"];
+      }
+
+      // Exit if we don't yet have a response
+      if (!oS.bHasResponse)
+      {
+        return String.Empty;
+      }
+
+      // Avoid looking inside binary content
+      if (Utilities.IsBinaryMIME(oS.oResponse.MIMEType))
+      {
+        oS.oFlags["HasFuzzle"] = "n/a";
+        return "n/a";	
+      }
+      
+      var s = oS.GetResponseBodyAsString();
+      var i = -1;
+    
+      if (s.Length > 0)
+      {
+        i = s.IndexOf("fuzzle", StringComparison.OrdinalIgnoreCase);
+        if (i >= 0) 
+        {
+          oS.oFlags["HasFuzzle"] = "Yes!";
+          return "Yes!";
+        }
+      }
+      
+      oS.oFlags["HasFuzzle"] = "Nope";
+      return "Nope";
+    }
+
+    // Page 194
+    public BindUIColumn(string sTitle)
+    public BindUIColumn(string sTitle, bool bSortNumerically)
+    public BindUIColumn(string sTitle, int iWidth)
+    public BindUIColumn(string sTitle, int iWidth, int iDisplayOrder)
+    public BindUIColumn(string sTitle, int iWidth, 
+                        int iDisplayOrder, bool bSortColumnNumerically)
+
+
+    // Page 194
+    FiddlerObject.UI.lvSessions.AddBoundColumn("ClientPort", 50, "X-CLIENTPORT");
+    FiddlerObject.UI.lvSessions.AddBoundColumn("Server", 50, "@response.Server");
+    FiddlerObject.UI.lvSessions.AddBoundColumn("Reason", 50,
+      "@request.X-Download-Initiator");
+
+    // Page 195
+    // Callback function that returns the "Time to first byte" value
+    static function getTTLB(oS: Session): String
+    {
+      var iMS = Math.round((oS.Timers.ServerDoneResponse
+                          - oS.Timers.FiddlerBeginRequest).TotalMilliseconds);
+      if (iMS > 0) return iMS.ToString();
+      return 0;
+    }
+
+    FiddlerObject.UI.lvSessions.AddBoundColumn("TTLB", 0, 50, true, getTTLB);
+
+    // Page 195
+    FiddlerObject.UI.lvSessions.AddBoundColumn("4", 0, 50, func4);
+    FiddlerObject.UI.lvSessions.AddBoundColumn("3", 0, 40, func3);
+    FiddlerObject.UI.lvSessions.AddBoundColumn("2", 0, 30, func2);
+    FiddlerObject.UI.lvSessions.AddBoundColumn("1", 0, 20, func1);
+
+    // Page 195
+    FiddlerApplication.UI.lvSessions.SetColumnOrderAndWidth("Protocol", 0, -1);
+
+    // Page 195
+    FiddlerApplication.UI.lvSessions.SetColumnOrderAndWidth("#",        0, -1);
+    FiddlerApplication.UI.lvSessions.SetColumnOrderAndWidth("Result",   1, -1);
+    FiddlerApplication.UI.lvSessions.SetColumnOrderAndWidth("Protocol", 0, -1);
+    FiddlerApplication.UI.lvSessions.SetColumnOrderAndWidth("Host",     0, -1);
+
+    // Page 196
+    static function Main() {
+      var today: Date = new Date();
+      FiddlerObject.StatusText = " CustomRules.js was loaded at: " + today;
+    }
+
+    // Page 196
+    static function OnPeekAtResponseHeaders(oSession: Session) {
+      FiddlerObject.log("_Underlined\t#" + oSession.id.ToString());
+      FiddlerObject.log("!Bolded\t" + oSession.fullUrl);
+      FiddlerObject.log("/Italicized\t" + oSession.oResponse.MIMEType);
+    }
+
+    // Page 197
+    var sTagName: String = 
+      FiddlerObject.prompt("Enter a HTML tag name", "<br />", "Specify Tag");
+
+    // Page 197
+    var oSessions = FiddlerApplication.UI.GetAllSessions();
+    var oExportOptions = FiddlerObject.createDictionary();
+    oExportOptions.Add("Filename", "C:\\users\\ericlaw\\desktop\\out1.har");
+    oExportOptions.Add("MaxTextBodyLength", 0);
+    oExportOptions.Add("MaxBinaryBodyLength", 0);
+    FiddlerApplication.DoExport("HTTPArchive v1.2", oSessions, oExportOptions, null);
+
+    // Page 198
+    static function Main() {
+      FiddlerObject.WatchPreference("fiddler.script", ObservePrefChange);
+    }
+
+    static function ObservePrefChange(oSender: Object, oPCEA: PrefChangeEventArgs) {
+      var sMsg: String = oPCEA.PrefName + " changed to " + oPCEA.ValueString;
+      MessageBox.Show(sMsg, "A pref was changed");
+    }
+
+
+    // Page 200
+    oSession.oRequest["HeaderName"] = "New value";
+    oSession.oRequest["X-Fiddler-SessionID"] = oSession.id.ToString();
+    oSession.oResponse.headers.Remove("Cookie");
+
+    // Page 200
+    if (oSession.oRequest.headers.Exists("Cookie")) 
+    {
+      oSession["ui-color"]="red";
+      oSession["ui-customcolumn"] = oSession.oRequest["Cookie"];
+    }
+
+    // Page 200
+    if (!oSession.isHTTPS && !oSession.HTTPMethodIs("CONNECT") && 
+        oSession.HostnameIs("myServer")) 
+    {
+      oSession.oRequest.headers.UriScheme = "https";
+    }
+
+    // Page 201
+    if (oSession.BitFlags & SessionFlags.ProtocolViolationInRequest) {
+      var sOverride = oSession["X-Original-Host"];
+      if (!String.IsNullOrEmpty(sOverride)) {
+        oSession["X-overrideHost"] = sOverride;
+        oSession["ui-backcolor"] = "yellow";
+                           
+        // Be sure to bypass the gateway, otherwise overrideHost doesn't work
+        oSession.bypassGateway = true;
+      }
+    }
+
+    // Page 201
+    if (oSession.uriContains("DropIt") && (null != oS.oRequest.pipeClient)) {
+
+      // Use this to close the connection using TCP/IP RST
+      oS.oRequest.pipeClient.EndWithRST();
+
+      // or use this to close the connection using TCP/IP FIN
+      // oS.oRequest.pipeClient.End();
+
+      // So that the UI shows what we did, create a placeholder
+      // response for display purposes:
+      if (this.state < SessionStates.SendingRequest) {
+         oS.utilCreateResponseAndBypassServer();
+      }
+
+      oS.oResponse.headers.HTTPResponseCode = 0;
+      oS.oResponse.headers.HTTPResponseStatus = "0 Connection dropped by script";
+      oS.responseBodyBytes = new byte[0];
+      oS.state = SessionStates.Aborted;
+      return;
+    }
+
+    // Page 201
+    if (oSession.HostnameIs("myServer") && oSession.uriContains(".aspx"))
+    {
+      oSession.bBufferResponse = true;
+    }
+
+    // Page 202
+    if (oSession.oResponse.MIMEType.Contains("image")) 
+    {
+      oSession["ui-hide"] = "Script hiding images";
+    }
+
+    // Page 202
+    if ((oSession.responseCode > 299) && (oSession.responseCode < 400)) {
+
+      oSession["ui-customcolumn"] = oSession.oResponse["Location"];
+      oSession["ui-bold"] = "redirect";
+    }
+
+    // Page 202
+    if ( !Utilities.IsBinaryMIME(oSession.oResponse.MIMEType)  )
+    {
+      oSession.utilDecodeResponse();
+      oSession.utilReplaceInResponse("-moz-", "-ms-");
+      oSession.utilReplaceInResponse("-webkit-", "-ms-");
+    }
+
+    // Page 202
+    // Use regular expressions to modify the response body: 
+    if (oSession.oResponse.MIMEType.Contains("html")) {
+      var oBody = oSession.GetResponseBodyAsString();
+
+      // Replace all content of DIV tags with an empty string.
+      // WARNING: Doesn't work well with nested DIVs.
+      var oRegEx =  /<div[^>]*>(.*?)<\/div>/gi;
+      oBody = oBody.replace(oRegEx, "");
+
+      // Set the response body to the div-less string
+      oSession.utilSetResponseBody(oBody); 
+    }
+
+    // Page 225
+    // This callback function is called on Pref changes
+    // under the branch we specified.
+    static function FnChange(o: Object, pceA: PrefChangeEventArgs) {
+      if (null != pceA) {
+          MessageBox.Show(pceA.PrefName + " changed to: " + pceA.ValueString); 
+      }
+      else {
+          MessageBox.Show("Unexpected.");
+      }
+    }
+
+    static function Main() {
+      // Attach a callback to the preference change
+      FiddlerObject.WatchPreference("fiddler.", FnChange);
+    }
+
+    // Page 248
+    var oSessions = FiddlerApplication.UI.GetAllSessions();
+    var oExportOptions = FiddlerObject.createDictionary();
+    oExportOptions.Add("Filename", "C:\\users\\ericlaw\\desktop\\out1.har");
+    oExportOptions.Add("MaxTextBodyLength", 1024);
+    oExportOptions.Add("MaxBinaryBodyLength", 16384);
+
+    FiddlerApplication.DoExport("HTTPArchive v1.2", oSessions, oExportOptions, null);
+
+    // Page 281
+    oSession["ui-hide"] = "hidden by Hide Images rule";
+
+
+
+
+ 
+
+
+
+
+
+
