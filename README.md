@@ -7,8 +7,6 @@
 
 ** Fiddler命令行教程：http://docs.telerik.com/fiddler/knowledgebase/quickexec  
 
-** 推荐一个中文博客：http://www.cnblogs.com/mcho/p/3983066.html  
-
 ** FiddlerScript的api：http://fiddlerbook.com/Fiddler/dev/ScriptSamples.asp
 
 ** jscript.net官网教程：https://msdn.microsoft.com/en-us/library/91td9cas(v=vs.80).aspx
