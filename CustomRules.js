@@ -212,6 +212,12 @@ class Handlers
                 oSession.oRequest.headers.Remove("If-Modified-Since");
                 oSession.oRequest["Pragma"] = "no-cache";
             }
+		
+		//5：修改请求版本检验的接口中的header
+        if(oSession.HostnameIs("host") && oSession.url.IndexOf("/getAppVersionInfo")>-1)
+        {
+            oSession.oRequest["version"] = "1.0.0"
+        }
 
         // User-Agent Overrides
         if (null != sUA) {
@@ -372,6 +378,36 @@ class Handlers
                 
             }
 		*/
+		/*
+		//脚本10：该方法进行修改pdl我的页面状态显示内容
+        if(oSession.HostnameIs("hoat") && oSession.url.IndexOf("/userAccount/findCreditAmount")>-1){
+            var res = oSession.GetResponseBodyAsString();
+            var resJson = Fiddler.WebFormats.JSON.JsonDecode(res);
+            //前端按钮显示类型（0：立即验证身份，获取额度;1:立即借款;2:立即还款;3:在途） 
+            var rand = randInt(0,3);
+            if(rand == 2){
+                //FiddlerObject.alert(rand);
+                rand = 3;
+            }
+            resJson.JSONObject['data']['showType'] = rand;
+            var newRes = Fiddler.WebFormats.JSON.JsonEncode(resJson.JSONObject);
+            oSession.utilSetResponseBody(newRes);
+            
+            }*/
+       
+       /*
+        //脚本11：主要验证版本升级接口对应客户端的功能
+        if(oSession.HostnameIs("host") && oSession.url.IndexOf("/getAppVersionInfo")>-1){
+            //var res = oSession.GetResponseBodyAsString();
+            
+            var jsondata = '{"data": {"newestUrl": "url","newestVersion": "1.0.1","upgradeContent": "测试描述:版本升级","upgradeType": "1"},"message": "操作成功","status": "000000"}';
+            var resJson = Fiddler.WebFormats.JSON.JsonDecode(jsondata);
+            var newRes = Fiddler.WebFormats.JSON.JsonEncode(resJson.JSONObject);
+            
+            oSession.utilSetResponseBody(newRes);
+            
+        }*/
+		
      }
 
 /*
