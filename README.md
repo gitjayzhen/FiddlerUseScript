@@ -53,7 +53,20 @@
 	    oSession.hostname = "api.mobile.youku.com"
 		  }
 ```
-	
+
+//2019.04.26 手机模拟添加cookie（区别于种cookie 在onBeforeResponse里）
+```
+if (oSession.HostnameIs("******") && oSession.oRequest.headers.Exists("Cookie") ) {
+
+    var sCookie = oSession.oRequest["Cookie"]; 
+    //用replace方法或者正则表达式的方法去操作cookie的string
+    //sCookie = sCookie.Replace("cookieName=", "ignoreme="); 
+    sCookie = sCookie + ";tt_spver=1";
+
+    oSession.oRequest["Cookie"] = sCookie; 
+}
+```
+
 ## +++++++++++++++++beforerespond+++++++++++++++++++++
 
 5. 需要在返回头这里就设置buffer处理，否则，后续无法在onBeforeResponse中修改body（修改的动作不会阻塞原来的返回）
