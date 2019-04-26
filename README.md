@@ -54,7 +54,16 @@
 		  }
 ```
 
-//2019.04.26 手机模拟添加cookie（区别于种cookie 在onBeforeResponse里）
+2019.04.26 手机模拟添加cookie（区别于种cookie 在onBeforeResponse里）
+
+* 删除所有的cookie
+`oSession.oRequest.headers.Remove("Cookie");`
+
+* 新建cookie
+`oSession.oRequest.headers.Add("Cookie", "username=testname;testpassword=P@ssword1");`
+
+注意: Fiddler script不能直接删除或者编辑单独的一个cookie， 你需要用replace方法或者正则表达式的方法去操作cookie的string
+
 ```
 if (oSession.HostnameIs("******") && oSession.oRequest.headers.Exists("Cookie") ) {
 
