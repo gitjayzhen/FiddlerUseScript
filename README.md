@@ -23,6 +23,13 @@
 1. 在此处【设置代理网络限速】1KB的量 50Kb/s需要delay 160ms <br>
   带宽：mbps kbps (比特流)  网速：KB/s MB/s （字节流）   <br>
   修改完记得勾选【simulate modem speeds】[randInt(1,50) 模拟网络抖动]<br>
+  
+```
+上传带宽 = 1KB/300ms = (1 * 8/1000) /0.300 ≈  0.027Mbps
+下载带宽 = 1KB/150ms = (1 * 8/1000) /0.150 ≈ 0.053Mbps
+（1MB = 1024 KB ≈ 1000 KB 这里为了运算简便就用了1000的倍数，忽略误差）
+```
+  
 ```
     static function randInt(min, max) {
         return Math.round(Math.random()*(max-min)+min);
