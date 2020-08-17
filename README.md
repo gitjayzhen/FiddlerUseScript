@@ -16,7 +16,7 @@
 
 ### 该文件在window的文件目录位置：C:\Users\"you_pc_name"\Documents\Fiddler2\Scripts
 
-# FiddlerScript的场景应用(20180412)：
+# FiddlerScript的场景应用(20180412, 更新：20200817)：
 
 ## +++++++++++++++++beforerequest+++++++++++++++++++++++
 
@@ -57,9 +57,21 @@
 4. 在此处【重定向urlplace】host和url的判断  
 ```
   if(oSession.HostnameIs("host") && oSession.url.IndexOf("url_path") > -1){
-	    oSession.hostname = "api.mobile.youku.com"
+	    oSession.hostname = "api.mobile.xxx.com"
 		  }
 ```
+5. 在此处【设置请求的header】，测试网络爬虫时候会用，
+```
+// TSET FOR Spider： 根据网站来限定请求
+if (oSession.HostnameIs("test.com")) {
+    // 模拟修改请求的用户端ip，这种情况对独立的网络有效，对于公司级的网络，还是有一些问题，需要借助vpn
+    oSession.oRequest["X-Forwarded-For"]="16.12.23.16";
+    // 修改请求的header
+    oSession.oRequest["User-Agent"] = "spider Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.81 Safari/537.36 SE 2.X MetaSr 1.0";
+
+}
+```
+
 
 2019.04.26 手机模拟添加cookie（区别于种cookie 在onBeforeResponse里）
 
