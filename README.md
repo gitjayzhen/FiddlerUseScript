@@ -194,3 +194,58 @@ if (oSession.HostnameIs("******") && oSession.oRequest.headers.Exists("Cookie") 
         oSession.oResponse.headers.HTTPResponseStatus = "use fiddler change responed code";
     }
 ```
+12. 自定义菜单
+```
+    //这里是新加的菜单项       
+    RulesString("Override &Allow-Origin", true)             //一级菜单名称  
+    RulesStringValue(1,"http://xx", "http://xx.com", true)          //指定几个默认的的选项
+    RulesStringValue(2,"https://xx", "https://xx.com", true)          //指定几个默认的的选项
+
+    //RulesStringValue(1,"xx_test", "https://test.xx.com", true)          //指定几个默认的的选项  
+    RulesStringValue(3,"&Custom...", "%CUSTOM%")        //允许用户自已定义,点击时弹出输入  
+
+    //如果加第4个参数为true的话,会把当前规则当作默认规则,每次启动都会生效,如:  
+    //RulesStringValue(5,"菜单项显示内容","菜单项选中对应值",true)//将会默认选中此项  
+    public static var sAllowOriginss: String = null;      //定义变量名称              
+```
+
+13. 使用自定义得变量（请求跨域操作）
+```angular2html
+    // 12.自定义菜单得内容里，最后一行 public static var sAllowOriginss: String = null;      //定义变量名称
+    // 对这个sAllowOriginss变量进行使用（在OnBeforeResponse里使用）
+    if (sAllowOrigin && !oSession.oResponse.headers.Exists("Access-Control-Allow-Origin"))
+        {
+            oSession.oResponse.headers.Add("Access-Control-Allow-Credentials", true);
+            oSession.oResponse.headers.Add("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+            oSession.oResponse.headers.Add("Access-Control-Allow-Origin", sAllowOrigin);
+        
+        } 
+```
+
+14. 对fiddler里的session按照设备进行过滤
+```
+	public static var gs_FilterDevice: boolean = false;	// 是否过滤单设备请求标志
+	public static var gs_FilterClientIP: String = null;	// 显示请求的设备的 ClientIP
+
+	static function IsUnMatchClientIP(oS:Session):Boolean {
+		return (oS.m_clientIP != gs_FilterClientIP);
+	}
+	public static ContextAction("开/关过滤单设备请求")
+	function ToggleDeviceFilter(oSessions: Fiddler.Session[]){
+		if (gs_FilterDevice) {
+			gs_FilterDevice = false;
+			return;
+		}
+	var oS: Session = FiddlerApplication.UI.GetFirstSelectedSession();
+	if (null == oS) return;
+	if (!gs_FilterDevice) {
+		gs_FilterDevice = true;
+	}
+	gs_FilterClientIP = oS.clientIP;
+	// 删除当前已显示的非所关心设备的请求
+	FiddlerApplication.UI.actSelectSessionsMatchingCriteria(IsUnMatchClientIP);
+	FiddlerApplication.UI.actRemoveSelectedSessions();
+}
+
+Fiddler修改脚本进行对fiddler里的session按照设备进行过滤
+```
