@@ -2,6 +2,8 @@
 
 ### 简介：抓包工具，调试接口除了已有的功能，还可以使用灵活的脚本来处理一些场景
 
+### 欢迎各位朋友 request 自己的经验方案
+
 **************************************************************************************************************
 ** 官网脚本api示例教程：http://docs.telerik.com/fiddler/KnowledgeBase/FiddlerScript/ModifyRequestOrResponse  
 
@@ -13,6 +15,9 @@
 
 ** google网上论坛：https://groups.google.com/forum/?fromgroups#%21forum/httpfiddler
 *************************************************************************************************************
+
+[TOC]
+
 
 ### 该文件在window的文件目录位置：C:\Users\"you_pc_name"\Documents\Fiddler2\Scripts
 
